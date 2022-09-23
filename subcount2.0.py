@@ -6,8 +6,7 @@ import time
 mixer.init()
 mixer.music.load("RickRoll.wav")
 
-# this is an empty list that will hold my subscounts 
-subscribers = []
+highestSubcount = None
 
 # for every sub I gain, this counter will increment
 # the volume of the RickRoll audio file
@@ -34,26 +33,25 @@ while True:
     # converting the subcount from a string to an integer
     currentSubcount = int(output)
 
-    # with every loop, add a subscriber count to the list
-    subscribers.append(currentSubcount)
+    if not highestSubcount:
+        # initialize the highest subcount during the first iteration
+        highestSubcount = currentSubcount
 
     # if I gain subscribers print a message, play and increase
     # the volume of the audio and modify the list
-    if subscribers[-1] > subscribers[0]:
+    # Use a while loop to ensure each individual sub results in a rRoll
+    while currentSubcount > highestSubcount:
         print("You gained subscribers!")
         counter += 0.3
         mixer.music.set_volume(0.1 * counter)
         mixer.music.play()
-        subscribers[0] = subscribers[0] + 1
+        highestSubcount += 1
 
     # if I lose subscribers, print a message and modify the list
-    elif subscribers[-1] < subscribers[0]:
-        print("You lost subscribers!")
-        subscribers[0] = subscribers[0] -1   
+    if currentSubcount < highestSubcount:
+        print(f"You lost {highestSubcount - currentSubcount} subscribers. Make more videos for increased sub stats.")
 
     # prints
-    print(subscribers)
+    print(f"Current subcount: {currentSubcount}, Record subcount: {highestSubcount}")
 
     time.sleep(10)
-
-
